@@ -82,60 +82,46 @@ import sun.misc.SharedSecrets;
 public class ArrayList<E> extends AbstractList<E>
         implements List<E>, RandomAccess, Cloneable, java.io.Serializable
 {
+
+    //反序列化时使用
     private static final long serialVersionUID = 8683452581122892189L;
 
-    /**
-     * Default initial capacity.
-     */
+    //默认容量是10
     private static final int DEFAULT_CAPACITY = 10;
 
-    /**
-     * Shared empty array instance used for empty instances.
-     */
+    //声明一个空元素的数组
     private static final Object[] EMPTY_ELEMENTDATA = {};
 
-    /**
-     * Shared empty array instance used for default sized empty instances. We
-     * distinguish this from EMPTY_ELEMENTDATA to know how much to inflate when
-     * first element is added.
-     */
+    //默认空元素
     private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
 
     /**
-     * The array buffer into which the elements of the ArrayList are stored.
-     * The capacity of the ArrayList is the length of this array buffer. Any
-     * empty ArrayList with elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA
-     * will be expanded to DEFAULT_CAPACITY when the first element is added.
+     * 声明存储元素的数组，当添加第一个元素的时候扩展到默认的长度10
      */
     transient Object[] elementData; // non-private to simplify nested class access
 
-    /**
-     * The size of the ArrayList (the number of elements it contains).
-     *
-     * @serial
-     */
+    //list包含元素的个数
     private int size;
 
     /**
-     * Constructs an empty list with the specified initial capacity.
-     *
-     * @param  initialCapacity  the initial capacity of the list
-     * @throws IllegalArgumentException if the specified initial capacity
-     *         is negative
+     *构造函数指定初始化的长度
      */
     public ArrayList(int initialCapacity) {
         if (initialCapacity > 0) {
+            //长度大于0
             this.elementData = new Object[initialCapacity];
         } else if (initialCapacity == 0) {
+            //长度等于0时，将之前声明好的空数组赋值给elementData
             this.elementData = EMPTY_ELEMENTDATA;
         } else {
+            //index不符合规则，抛出异常
             throw new IllegalArgumentException("Illegal Capacity: "+
                                                initialCapacity);
         }
     }
 
     /**
-     * Constructs an empty list with an initial capacity of ten.
+     *无参的构造函数
      */
     public ArrayList() {
         this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
@@ -150,21 +136,20 @@ public class ArrayList<E> extends AbstractList<E>
      * @throws NullPointerException if the specified collection is null
      */
     public ArrayList(Collection<? extends E> c) {
+        //将集合转为数组
         elementData = c.toArray();
         if ((size = elementData.length) != 0) {
             // c.toArray might (incorrectly) not return Object[] (see 6260652)
             if (elementData.getClass() != Object[].class)
                 elementData = Arrays.copyOf(elementData, size, Object[].class);
         } else {
-            // replace with empty array.
+            // 用空数组代替
             this.elementData = EMPTY_ELEMENTDATA;
         }
     }
 
     /**
-     * Trims the capacity of this <tt>ArrayList</tt> instance to be the
-     * list's current size.  An application can use this operation to minimize
-     * the storage of an <tt>ArrayList</tt> instance.
+     *可以使list的size和length相等
      */
     public void trimToSize() {
         modCount++;
@@ -176,20 +161,19 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * Increases the capacity of this <tt>ArrayList</tt> instance, if
-     * necessary, to ensure that it can hold at least the number of elements
-     * specified by the minimum capacity argument.
-     *
-     * @param   minCapacity   the desired minimum capacity
+     * 确保list数组的容量
+     * @param   minCapacity   期望的最小容量值
      */
     public void ensureCapacity(int minCapacity) {
+        //判断如果elementData!=[]，minExpand=0
+        //如果elementData==[]，minExpand=默认长度10
         int minExpand = (elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA)
             // any size if not default element table
             ? 0
             // larger than default for default empty table. It's already
             // supposed to be at default size.
             : DEFAULT_CAPACITY;
-
+        //如果minCapacity>minExpand
         if (minCapacity > minExpand) {
             ensureExplicitCapacity(minCapacity);
         }
@@ -249,8 +233,7 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * Returns the number of elements in this list.
-     *
+     * 返回list中元素的数量
      * @return the number of elements in this list
      */
     public int size() {
@@ -258,8 +241,7 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * Returns <tt>true</tt> if this list contains no elements.
-     *
+     * 判断数组中是否有元素
      * @return <tt>true</tt> if this list contains no elements
      */
     public boolean isEmpty() {
@@ -337,21 +319,9 @@ public class ArrayList<E> extends AbstractList<E>
         }
     }
 
-    /**
-     * Returns an array containing all of the elements in this list
-     * in proper sequence (from first to last element).
-     *
-     * <p>The returned array will be "safe" in that no references to it are
-     * maintained by this list.  (In other words, this method must allocate
-     * a new array).  The caller is thus free to modify the returned array.
-     *
-     * <p>This method acts as bridge between array-based and collection-based
-     * APIs.
-     *
-     * @return an array containing all of the elements in this list in
-     *         proper sequence
-     */
+    //将所有的集合元素以数组的形式返回
     public Object[] toArray() {
+        //调用了Arrays的copyof方法
         return Arrays.copyOf(elementData, size);
     }
 
@@ -622,10 +592,7 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * Checks if the given index is in range.  If not, throws an appropriate
-     * runtime exception.  This method does *not* check if the index is
-     * negative: It is always used immediately prior to an array access,
-     * which throws an ArrayIndexOutOfBoundsException if index is negative.
+     *判断传入的index是否比list集合的元素多，如果多久抛出outOfBond异常
      */
     private void rangeCheck(int index) {
         if (index >= size)
