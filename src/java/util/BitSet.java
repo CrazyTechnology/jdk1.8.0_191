@@ -1,28 +1,3 @@
-/*
- * Copyright (c) 1995, 2014, Oracle and/or its affiliates. All rights reserved.
- * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- */
-
 package java.util;
 
 import java.io.*;
@@ -43,11 +18,13 @@ import java.util.stream.StreamSupport;
  *
  * <p>By default, all bits in the set initially have the value
  * {@code false}.
- *
+ * 所有的bit位默认值是false
  * <p>Every bit set has a current size, which is the number of bits
- * of space currently in use by the bit set. Note that the size is
- * related to the implementation of a bit set, so it may change with
- * implementation. The length of a bit set relates to logical length
+ * of space currently in use by the bit set.
+ * 每个set都有一个当前大小，即bit set 当前使用的空间
+ * Note that the size is related to the implementation of a bit set, so it may change with implementation.
+ *注意，size与位集的实现有关，因此它可能随实现而更改。
+ * The length of a bit set relates to logical length
  * of a bit set and is defined independently of implementation.
  *
  * <p>Unless otherwise noted, passing a null parameter to any of the
@@ -56,7 +33,7 @@ import java.util.stream.StreamSupport;
  *
  * <p>A {@code BitSet} is not safe for multithreaded use without
  * external synchronization.
- *
+ *bitset线程不安全的
  * @author  Arthur van Hoff
  * @author  Michael McCloskey
  * @author  Martin Buchholz
@@ -66,10 +43,13 @@ public class BitSet implements Cloneable, java.io.Serializable {
     /*
      * BitSets are packed into arrays of "words."  Currently a word is
      * a long, which consists of 64 bits, requiring 6 address bits.
+     * word 是long类型64位需要6个地址位
      * The choice of word size is determined purely by performance concerns.
      */
     private final static int ADDRESS_BITS_PER_WORD = 6;
+    //默认1 << 6 =64
     private final static int BITS_PER_WORD = 1 << ADDRESS_BITS_PER_WORD;
+    //默认63
     private final static int BIT_INDEX_MASK = BITS_PER_WORD - 1;
 
     /* Used to shift left or right for a partial word mask */
@@ -88,6 +68,7 @@ public class BitSet implements Cloneable, java.io.Serializable {
 
     /**
      * The internal field corresponding to the serialField "bits".
+     * 与串行字段“位”对应的内部字段
      */
     private long[] words;
 
@@ -109,6 +90,7 @@ public class BitSet implements Cloneable, java.io.Serializable {
      * Given a bit index, return word index containing it.
      */
     private static int wordIndex(int bitIndex) {
+        //默认 63 >> 6=0
         return bitIndex >> ADDRESS_BITS_PER_WORD;
     }
 
@@ -138,8 +120,10 @@ public class BitSet implements Cloneable, java.io.Serializable {
 
     /**
      * Creates a new bit set. All bits are initially {@code false}.
+     * 创建一个新的bit set 。所有的bit都是初始的false
      */
     public BitSet() {
+        //BITS_PER_WORD 默认64
         initWords(BITS_PER_WORD);
         sizeIsSticky = false;
     }
@@ -163,6 +147,8 @@ public class BitSet implements Cloneable, java.io.Serializable {
     }
 
     private void initWords(int nbits) {
+        //wordIndex(63)=0
+        //words =new Long[1]
         words = new long[wordIndex(nbits-1) + 1];
     }
 
@@ -440,6 +426,7 @@ public class BitSet implements Cloneable, java.io.Serializable {
      * @since  JDK1.0
      */
     public void set(int bitIndex) {
+        //设置指定位置的bit位
         if (bitIndex < 0)
             throw new IndexOutOfBoundsException("bitIndex < 0: " + bitIndex);
 
